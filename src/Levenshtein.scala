@@ -19,7 +19,7 @@ object Levenshtein extends App {
   val base = Source.fromFile("/users/roncoleman/tmp/style/linux-kernel/acct.c").mkString
   val treated = Source.fromFile("/users/roncoleman/tmp/style/acct.c.linux").mkString
 
-  val d = distance.apply(base, treated)
+  val d = distance.apply(treated, base)
   println(d)
 
 
