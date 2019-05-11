@@ -1,3 +1,5 @@
+package prelim
+
 import scala.io.Source
 
 object Levenshtein extends App {

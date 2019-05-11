@@ -1,9 +1,8 @@
-import java.io.File
+package prelim
 
-import Levenshtein.distance
+import util.Helper
 
 import scala.io.Source
-import util.Helper
 
 object Levenshtein2 extends App {
 

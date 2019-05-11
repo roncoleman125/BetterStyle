@@ -26,4 +26,10 @@ object Helper {
   }
 
   def removeFile(path: String): Boolean = new File(path).delete()
+
+  def repaste(s: String): String = {
+    s.replace(" ", "# ")
+    //      .replace("\n","\n@")
+    //      .replace("\t","\t!")
+  }
 }
