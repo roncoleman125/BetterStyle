@@ -6,13 +6,17 @@ import util.Helper
 import scala.io.Source
 
 /**
-  * This object analyzes Linux code treated with Linux and GNU styles
+  * This object analyzes code treated with Linux and GNU styles
   */
-object LinuxGnu extends App {
-  val DIR = "/users/roncoleman/tmp/style/linux-kernel"
-//  val DIR = "/users/roncoleman/tmp/style/linux-lib"
+object CosineAnalysis extends App {
+//  val DIR = "/users/roncoleman/tmp/style/linux-kernel"
+  val DIR = "/users/roncoleman/tmp/style/linux-lib"
+//  val DIR = "/users/roncoleman/tmp/style/coreutils"
+//  val DIR = "/users/roncoleman/tmp/style/gmp"
+//  val DIR = "/users/roncoleman/tmp/style/petsc"
+//  val DIR = "/users/roncoleman/tmp/style/fftw-nostubs"
 
-  val STYLES = List("linux","gnu")
+  val STYLES = List("kr", "linux", "orig", "gnu")
 
   val t0 = System.currentTimeMillis
 
@@ -24,7 +28,15 @@ object LinuxGnu extends App {
   System.setProperty("user.dir", DIR)
   val listOfFiles = Helper.getListOfFiles
 
-  println("base loc pro1 linux:loc pro2 cos d gnu:loc pro2 cos d")
+  // Output the report header
+//  println("base loc pro1 linux:loc pro2 cos d gnu:loc pro2 cos d")
+  print("base loc pro1 ")
+  STYLES.foreach { style =>
+    print(style+":loc pro2 cos d ")
+  }
+  println("")
+
+  Helper.initCodec
 
   listOfFiles.foreach { input =>
     print(input.getName + " ")
@@ -33,7 +45,7 @@ object LinuxGnu extends App {
     val baseLoc = base.count { c => c == '\n' }
     print(baseLoc + " ")
 
-    val s1 = Helper.repaste(base)
+    val s1 = Helper.remodel(base)
 
     val profile1 = cosine.getProfile(s1)
     print(profile1.size() + " ")
@@ -41,9 +53,13 @@ object LinuxGnu extends App {
     STYLES.foreach { style =>
       val output = input + "." + style
 
-      val astyleCmd = "Astyle --style=" + style + " < " + input + " > " + output
+//      val options = if(style == "gnu") "--break-return-type" else ""
 
-      val cmd = Array("/bin/sh", "-c", astyleCmd)
+//      val styleCmd = "Astyle " + options + " --mode=c --style=" + style + " < " + input + " > " + output
+      val gindentCmd = "gindent -" + style + " < " + input + " > " + output
+
+//      val cmd = Array("/bin/sh", "-c", styleCmd)
+      val cmd = Array("/bin/sh", "-c", gindentCmd)
 
       Runtime.getRuntime.exec(cmd).waitFor
 
@@ -53,7 +69,7 @@ object LinuxGnu extends App {
       val treatedLoc = treated.count(c => c == '\n') + " "
       print(treatedLoc)
 
-      val s2 = Helper.repaste(treated)
+      val s2 = Helper.remodel(treated)
 
       val profile2 = cosine.getProfile(s2)
       print(profile2.size() + " ")

@@ -1,4 +1,4 @@
-package prelim
+package experimental
 
 import scala.io.Source
 
@@ -33,8 +33,8 @@ object Cosine2 extends App {
   val treated = Source.fromFile("/users/roncoleman/tmp/style/acct.c.linux").mkString
 
   import util.Helper._
-  t1 = repaste(base)
-  t2 = repaste(treated)
+  t1 = remodel(base)
+  t2 = remodel(treated)
 
   profile1 = cosine.getProfile(t1)
   profile2 = cosine.getProfile(t2)
@@ -44,8 +44,8 @@ object Cosine2 extends App {
   val base2 = Source.fromFile("/users/roncoleman/tmp/style/linux-kernel/fair.c").mkString
   val treated2 = Source.fromFile("/users/roncoleman/tmp/style/fair.c.linux").mkString
 
-  t1 = repaste(base2)
-  t2 = repaste(treated2)
+  t1 = remodel(base2)
+  t2 = remodel(treated2)
 
   profile1 = cosine.getProfile(t1)
   profile2 = cosine.getProfile(t2)
@@ -55,8 +55,8 @@ object Cosine2 extends App {
   val base3 = Source.fromFile("/users/roncoleman/tmp/style/linux-kernel/verifier.c").mkString
   val treated3 = Source.fromFile("/users/roncoleman/tmp/style/verifier.c.linux").mkString
 
-  t1 = repaste(base3)
-  t2 = repaste(treated3)
+  t1 = remodel(base3)
+  t2 = remodel(treated3)
 
   profile1 = cosine.getProfile(t1)
   profile2 = cosine.getProfile(t2)
@@ -66,8 +66,8 @@ object Cosine2 extends App {
   val base4 = Source.fromFile("/users/roncoleman/tmp/style/linux-kernel/fair.c").mkString
   val treated4 = Source.fromFile("/users/roncoleman/tmp/style/fair.c.gnu").mkString
 
-  t1 = repaste(base4)
-  t2 = repaste(treated4)
+  t1 = remodel(base4)
+  t2 = remodel(treated4)
 
   profile1 = cosine.getProfile(t1)
   profile2 = cosine.getProfile(t2)
@@ -78,8 +78,8 @@ object Cosine2 extends App {
   val treated5 = Source.fromFile("/users/roncoleman/tmp/style/verifier.c.gnu").mkString
 
   import util._
-  t1 = Helper.repaste(base5)
-  t2 = Helper.repaste(treated5)
+  t1 = Helper.remodel(base5)
+  t2 = Helper.remodel(treated5)
 
   profile1 = cosine.getProfile(t1)
   profile2 = cosine.getProfile(t2)
@@ -90,8 +90,8 @@ object Cosine2 extends App {
   val base6 = Source.fromFile("/users/roncoleman/tmp/style/linux-kernel/acct.c").mkString
   val treated6 = Source.fromFile("/users/roncoleman/tmp/style/acct.c.gnu").mkString
 
-  t1 = Helper.repaste(base6)
-  t2 = Helper.repaste(treated6)
+  t1 = Helper.remodel(base6)
+  t2 = Helper.remodel(treated6)
 
   profile1 = cosine.getProfile(t1)
   profile2 = cosine.getProfile(t2)

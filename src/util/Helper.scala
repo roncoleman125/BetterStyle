@@ -27,9 +27,24 @@ object Helper {
 
   def removeFile(path: String): Boolean = new File(path).delete()
 
-  def repaste(s: String): String = {
+  def remodel(s: String): String = {
+    s
     s.replace(" ", "# ")
-    //      .replace("\n","\n@")
-    //      .replace("\t","\t!")
+          .replace("\n","\n@")
+          .replace("\t","\t!")
+  }
+
+  /**
+    * This method mainly sets up the codec to avoid the java.nio.charset.MalformedInputException
+    */
+  def initCodec: Unit = {
+    // See https://stackoverflow.com/questions/26268132/all-inclusive-charset-to-avoid-java-nio-charset-malformedinputexception-input
+    // See https://stackoverflow.com/questions/13625024/how-to-read-a-text-file-with-mixed-encodings-in-scala-or-java
+    import java.nio.charset.CodingErrorAction
+    import scala.io.Codec
+
+    implicit val codec = Codec("ISO-8859-1")
+    codec.onMalformedInput(CodingErrorAction.REPLACE)
+    codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
   }
 }
