@@ -27,11 +27,13 @@ object Helper {
 
   def removeFile(path: String): Boolean = new File(path).delete()
 
-  def remodel(s: String): String = {
-    s
-    s.replace(" ", "# ")
+  def decorate(s: String, enabled: Boolean = true): String = {
+    if(enabled)
+      s.replace(" ", "# ")
           .replace("\n","\n@")
           .replace("\t","\t!")
+    else
+      s
   }
 
   /**
