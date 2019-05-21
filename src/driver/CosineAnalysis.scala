@@ -1,7 +1,7 @@
 package driver
 
 import info.debatty.java.stringsimilarity.{Cosine, Levenshtein}
-import util.Helper
+import util.Helper._
 
 import scala.io.Source
 
@@ -10,25 +10,28 @@ import scala.io.Source
   */
 object CosineAnalysis extends App {
 
+  val DECORATE_ENABLED = getPropertyOrElse("decorate",true)
+
   //  val DIR = "/users/roncoleman/tmp/style/linux-lib"
   //  val DIR = "/users/roncoleman/tmp/style/coreutils"
   //  val DIR = "/users/roncoleman/tmp/style/gmp"
   //  val DIR = "/users/roncoleman/tmp/style/petsc"
   //  val DIR = "/users/roncoleman/tmp/style/fftw-nostubs"
   //  val DIR = "/users/roncoleman/tmp/style/gimp"
-  val SRC_DIR = "linux-kernel"
+  val SRC_DIR = getPropertyOrElse("srcdir","linux-kernel")
+//  val SRC_DIR = "linux-lib"
 
-  val BASE_DIR = "/users/roncoleman/tmp/style/"
+  val WORKING_DIR = getPropertyOrElse("wdir","/users/roncoleman/tmp/style/")
 
   val STYLES = List("kr", "linux", "orig", "gnu")
 
   val RESULTS_FILE = "results.txt"
 
-  System.setProperty("user.dir", BASE_DIR)
+  System.setProperty("user.dir", WORKING_DIR)
 
   val t0 = System.currentTimeMillis
 
-  val os = new java.io.PrintStream(new java.io.FileOutputStream(BASE_DIR + RESULTS_FILE,false))
+  val os = new java.io.PrintStream(new java.io.FileOutputStream(WORKING_DIR + RESULTS_FILE,false))
 
   val NGRAM = 3
 
@@ -36,20 +39,20 @@ object CosineAnalysis extends App {
 
   val levenshtein = new Levenshtein
 
-  val listOfFiles = Helper.getListOfFiles(SRC_DIR)
+  val listOfFiles = getListOfFiles(SRC_DIR)
 
-  println("processing "+listOfFiles.size+" files")
+  println("processing "+listOfFiles.size+" files in "+SRC_DIR)
 
   // Output the report header
-  os.print("base loc pro1 ")
+  os.print("file base:loc base:pro1 ")
 
   STYLES.foreach { style =>
-    os.print(style+":loc pro2 cos d ")
+    os.print(style+":loc "+style+":pro2 "+style+":cos "+style+":d ")
   }
   os.println("")
 
   // Set the file input codec
-  Helper.initCodec
+  initCodec
 
   // Process each file in the src directory
   (0 until listOfFiles.size).foreach { k =>
@@ -66,7 +69,7 @@ object CosineAnalysis extends App {
     os.print(baseLoc + " ")
 
     // Decorate the baseline
-    val s1 = Helper.decorate(base)
+    val s1 = decorate(base, DECORATE_ENABLED)
 
     // Get the baseline's profile or vector
     val profile1 = cosine.getProfile(s1)
@@ -86,14 +89,14 @@ object CosineAnalysis extends App {
 
       // Read-in the treated file and remove it
       val treated = Source.fromFile(output).mkString
-      Helper.removeFile(output)
+      removeFile(output)
 
       // Get the LOC of the treated file
       val treatedLoc = treated.count(c => c == '\n') + " "
       os.print(treatedLoc)
 
       // Decorate the treated file
-      val s2 = Helper.decorate(treated)
+      val s2 = decorate(treated, DECORATE_ENABLED)
 
       // Get the treated file's profile or vector
       val profile2 = cosine.getProfile(s2)
