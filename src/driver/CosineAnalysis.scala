@@ -19,7 +19,6 @@ object CosineAnalysis extends App {
   //  val DIR = "/users/roncoleman/tmp/style/fftw-nostubs"
   //  val DIR = "/users/roncoleman/tmp/style/gimp"
   val SRC_DIR = getPropertyOrElse("srcdir","linux-kernel")
-//  val SRC_DIR = "linux-lib"
 
   val WORKING_DIR = getPropertyOrElse("wdir","/users/roncoleman/tmp/style/")
 
@@ -39,9 +38,9 @@ object CosineAnalysis extends App {
 
   val levenshtein = new Levenshtein
 
-  val listOfFiles = getListOfFiles(SRC_DIR)
+  val listOfFiles = getListOfFiles(SRC_DIR,".c")
 
-  println("processing "+listOfFiles.size+" files in "+SRC_DIR)
+  println("processing "+listOfFiles.size+" files in "+SRC_DIR+" decorating "+DECORATE_ENABLED)
 
   // Output the report header
   os.print("file base:loc base:pro1 ")
@@ -109,6 +108,7 @@ object CosineAnalysis extends App {
       // Get the edit distance between treated and base files
       val d = levenshtein.distance(treated, base)
       os.print(d.toInt+" ")
+      os.flush
     }
 
     os.println("")

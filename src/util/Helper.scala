@@ -3,15 +3,27 @@ package util
 import java.io.File
 
 object Helper {
-  def getListOfFiles(dir: String):List[File] = {
+  def getListOfFiles(dir: String, ext: String): Array[File] = {
     val wd = System.getProperty("user.dir")
 
     val d = if(dir.startsWith("/")) new File(dir) else new File(wd+"/"+dir)
 
-    if (d.exists && d.isDirectory)
-      d.listFiles.filter(_.isFile).toList
-    else
-      List[File]()
+//    if (d.exists && d.isDirectory)
+//      d.listFiles.filter(f => f.isFile && f.getName.endsWith(ext)).toList
+//    else
+//      List[File]()
+    generateRecursiveFileList(d).filter { f => f.getName.endsWith(ext) }
+  }
+
+
+  /**
+    * See https://alvinalexander.com/source-code/scala/create-list-all-files-beneath-directory-scala
+    * @param dir File directory
+    * @return list of files
+    */
+  def generateRecursiveFileList(dir: File): Array[File] = {
+    val these = dir.listFiles
+    these ++ these.filter(_.isDirectory).flatMap(generateRecursiveFileList)
   }
 
   def getListOfFiles():List[File] = {
