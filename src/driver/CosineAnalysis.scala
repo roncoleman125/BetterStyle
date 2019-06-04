@@ -32,15 +32,15 @@ object CosineAnalysis extends App {
 
   val os = new java.io.PrintStream(new java.io.FileOutputStream(WORKING_DIR + RESULTS_FILE,false))
 
-  val NGRAM = 3
+  val ngram = getPropertyOrElse("ngram",3)
 
-  val cosine = new Cosine(NGRAM)
+  val cosine = new Cosine(ngram)
 
   val levenshtein = new Levenshtein
 
   val listOfFiles = getListOfFiles(SRC_DIR,".c")
 
-  println("processing "+listOfFiles.size+" files in "+SRC_DIR+" decorating "+DECORATE_ENABLED)
+  println("processing "+listOfFiles.size+" files in "+SRC_DIR+" decorat "+DECORATE_ENABLED+" ngram "+ngram)
 
   // Output the report header
   os.print("file base:loc base:pro1 ")

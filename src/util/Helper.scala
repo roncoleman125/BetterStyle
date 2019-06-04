@@ -2,6 +2,8 @@ package util
 
 import java.io.File
 
+import scala.util.Random
+
 object Helper {
   def getListOfFiles(dir: String, ext: String): Array[File] = {
     val wd = System.getProperty("user.dir")
@@ -42,8 +44,8 @@ object Helper {
   def decorate(s: String, enabled: Boolean = true): String = {
     if(enabled)
       s.replace(" ", "$ ")
-          .replace("\n","\n@")
-          .replace("\t","\t`")
+        .replace("\n","\n@")
+        .replace("\t","\t`")
     else
       s
   }
