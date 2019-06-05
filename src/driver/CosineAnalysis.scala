@@ -40,7 +40,7 @@ object CosineAnalysis extends App {
 
   val listOfFiles = getListOfFiles(SRC_DIR,".c")
 
-  println("processing "+listOfFiles.size+" files in "+SRC_DIR+" decorat "+DECORATE_ENABLED+" ngram "+ngram)
+  println("processing "+listOfFiles.size+" files in "+SRC_DIR+" decorate "+DECORATE_ENABLED+" ngram "+ngram)
 
   // Output the report header
   os.print("file base:loc base:pro1 ")
