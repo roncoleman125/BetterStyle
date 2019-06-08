@@ -1,6 +1,7 @@
 package driver
 
-import info.debatty.java.stringsimilarity.{Cosine, Levenshtein}
+import info.debatty.java.stringsimilarity.{Cosine, Damerau, Jaccard, JaroWinkler, Levenshtein, LongestCommonSubsequence, NormalizedLevenshtein}
+import org.apache.commons.text.similarity.JaccardSimilarity
 import util.Helper._
 
 import scala.io.Source
@@ -8,7 +9,7 @@ import scala.io.Source
 /**
   * This object analyzes code treated with Linux and GNU styles
   */
-object CosineAnalysis extends App {
+object SimilarityAnalysis extends App {
 
   val DECORATE_ENABLED = getPropertyOrElse("decorate",true)
 
@@ -34,13 +35,18 @@ object CosineAnalysis extends App {
 
   val ngram = getPropertyOrElse("ngram",3)
 
-  val cosine = new Cosine(ngram)
+  val shingle = new Jaccard(ngram)
 
-  val levenshtein = new Levenshtein
+  // Get the metric string distance method
+  val msd = new Levenshtein
+//  val msd = new Damerau
+//  val msd = new JaroWinkler()
+//  val msd = new LongestCommonSubsequence
 
   val listOfFiles = getListOfFiles(SRC_DIR,".c")
 
-  println("processing "+listOfFiles.size+" files in "+SRC_DIR+" decorate "+DECORATE_ENABLED+" ngram "+ngram)
+  print(listOfFiles.size+" files "+SRC_DIR+" decorate "+DECORATE_ENABLED+" ngram "+ngram+" ")
+  println(shingle.getClass.getSimpleName+" "+msd.getClass.getSimpleName)
 
   // Output the report header
   os.print("file base:loc base:pro1 ")
@@ -71,7 +77,7 @@ object CosineAnalysis extends App {
     val s1 = decorate(base, DECORATE_ENABLED)
 
     // Get the baseline's profile or vector
-    val profile1 = cosine.getProfile(s1)
+    val profile1 = shingle.getProfile(s1)
     os.print(profile1.size() + " ")
 
     STYLES.foreach { style =>
@@ -98,15 +104,15 @@ object CosineAnalysis extends App {
       val s2 = decorate(treated, DECORATE_ENABLED)
 
       // Get the treated file's profile or vector
-      val profile2 = cosine.getProfile(s2)
+      val profile2 = shingle.getProfile(s2)
       os.print(profile2.size() + " ")
 
       // Compute the similarity
-      val similarity = cosine.similarity(profile1, profile2)
+      val similarity = shingle.similarity(profile1, profile2)
       os.print(similarity + " ")
 
       // Get the edit distance between treated and base files
-      val d = levenshtein.distance(treated, base)
+      val d = msd.distance(treated, base)
       os.print(d.toInt+" ")
       os.flush
     }
