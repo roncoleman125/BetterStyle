@@ -81,20 +81,29 @@ object SimilarityAnalysis extends App {
     os.print(profile1.size() + " ")
 
     STYLES.foreach { style =>
-      val output = input + "." + style
+      val output1 = input + "." + style
+
+      val output2 = output1 + "." + style
 
       // Build the style command
 //      val styleCmd = "Astyle " + options + " --mode=c --style=" + style + " < " + input + " > " + output
-      val styleCmd = "gindent -" + style + " < " + input + " > " + output
-
-      val cmd = Array("/bin/sh", "-c", styleCmd)
+      val styleCmd1 = "gindent -" + style + " < " + input + " > " + output1
+      val cmd1 = Array("/bin/sh", "-c", styleCmd1)
 
       // Invoke the style command and wait for the command to finish
-      Runtime.getRuntime.exec(cmd).waitFor
+      Runtime.getRuntime.exec(cmd1).waitFor
+
+      val styleCmd2 = "gindent -" + style + " < " + output1 + " > " + output2
+      val cmd2 = Array("/bin/sh", "-c", styleCmd2)
+
+      // Invoke the style command and wait for the command to finish
+      Runtime.getRuntime.exec(cmd2).waitFor
 
       // Read-in the treated file and remove it
-      val treated = Source.fromFile(output).mkString
-      removeFile(output)
+      val treated = Source.fromFile(output2).mkString
+
+      removeFile(output1)
+      removeFile(output2)
 
       // Get the LOC of the treated file
       val treatedLoc = treated.count(c => c == '\n') + " "
